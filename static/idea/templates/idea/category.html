@@ -1,0 +1,35 @@
+{% extends "idea/base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="card-group">
+        <div class="row row-cols-1 row-cols-md-3 g-6" style="margin-top: 10px;">
+    {% for i in ideas %}
+    <div class="col">
+    <div class="card border-dark mb-3 mx-auto p-2" style="width: 100%; height: 18rem;">
+        <div class="card-header card text-center">
+          <h5>
+            <a href="{{ i.get_absolute_url }}" class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover">
+              {{ i.title|truncatechars:30 }}
+            </a>
+          </h5>
+        </div>
+        <div class="card-body">
+          <h4 class="card-text">{{ i.description|linebreaks|truncatechars:40 }}</h4>
+        </div>
+        <div class="card-footer bg-transparent text-center">
+            <a href="{{ i.get_absolute_url }}">
+            <button src="{{ i.get_absolute_url}}" type="button" class="btn btn-success">
+                Выполнить
+            </button>
+        </a>
+    </div>
+</div>
+</div>
+    {% endfor %}
+
+</div>  
+</div>
+</div>
+    
+{% endblock content %}

@@ -1,0 +1,7 @@
+{% extends "idea/base.html" %}
+
+{% block content %}
+    {% for cat in categories %}
+    <p><a href="{% url 'category' cat.id %}">{{ cat.name }}</a><p>
+    {% endfor %}
+{% endblock content %}

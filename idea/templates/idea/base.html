@@ -1,0 +1,74 @@
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>{{ title }}</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{% static "css/styles.css" %}" type="text/css">
+        <link rel="shortcut icon" href="{% static 'images/funflow.ico' %}" type="image/x-icon"/>
+    </head>
+    <body>
+        <header class="p-3 text-bg-dark">
+        <div class="container-fluid">
+          <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+              <svg class="bi me-2" width="40" height="32" role="img" aria-label="Funflow"><img src="{% static 'images/funflow.ico' %}" width="40px"></svg>
+            </a>
+    
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+              <li><a href="{% url 'index' %}" class="nav-link px-2 text-white">Главная</a></li>
+              <li><a href="{% url 'add_idea' %}" class="nav-link px-2 text-white">Предложить идею</a></li>          
+              <div class="dropdown">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="dropdown04" data-bs-toggle="dropdown" aria-expanded="false">Категории</a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdown04">
+                        {% for cat in categories %}
+                        <li><a class="dropdown-item" href="{% url 'category' cat.slug %}">{{ cat.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                  </li>
+              </div>
+              <li><a href="#" class="nav-link px-2 text-white">О нас</a></li>
+            </ul>
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+              <input type="search" class="form-control form-control-dark  text-bg-dark" placeholder="Поиск..." label="Поиск">
+            </form>
+            <div class="text-end">
+              {% if request.user.is_authenticated %}
+                  <div class="dropdown text-end">
+                    <a href="#" class="d-block link-light text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                      {% if request.user.avatar %}
+                        <img src="{{ request.user.avatar.url }}" alt="mdo" width="32" height="32" class="rounded-circle">
+                      {% else %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="white" class="bi bi-person-fill" viewBox="0 0 16 16">
+                          <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                        </svg>
+                      {% endif %}
+                      </a>
+                    <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+                      <li><a class="dropdown-item" href="{% url 'profile' user.username %}">Мой профиль</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="{% url 'logout' %}">Выйти</a></li>
+                    </ul>
+                  </div>
+                  {% else %}
+                    <a href="{% url 'login' %}"><button type="button" class="btn btn-outline-light me-2">Войти</button></a>
+                    <a href="{% url 'register' %}"><button type="button" class="btn btn-warning">Регистрация</button></a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </header>
+    {% block content %}{% endblock content %}
+    
+    
+  </div>
+    {% bootstrap_javascript %}
+    </body>
+</html>
