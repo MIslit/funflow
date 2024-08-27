@@ -14,11 +14,11 @@
         <link rel="shortcut icon" href="{% static 'images/funflow.ico' %}" type="image/x-icon"/>
     </head>
     <body>
-        <header class="p-3 text-bg-dark">
-        <div class="container-fluid">
+        <header class="p-3 text-bg-dark" data-bs-theme="dark">
+        <div class="container">
           <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-              <svg class="bi me-2" width="40" height="32" role="img" aria-label="Funflow"><img src="{% static 'images/funflow.ico' %}" width="40px"></svg>
+              <img src="{% static 'images/funflow.ico' %}" width="40px">
             </a>
     
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
@@ -34,10 +34,12 @@
                     </ul>
                   </li>
               </div>
-              <li><a href="#" class="nav-link px-2 text-white">О нас</a></li>
+              <li><a href="{% url 'about' %}" class="nav-link px-2 text-white">О нас</a></li>
             </ul>
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-              <input type="search" class="form-control form-control-dark  text-bg-dark" placeholder="Поиск..." label="Поиск">
+            <form action="{% url 'search_results' %}" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 d-flex" role="search" method="POST">
+              {% csrf_token %}
+              <input name="searched" type="search" class="form-control me-2 form-control-dark text-bg-dark" placeholder="Поиск..." label="Поиск">
+              <button class="btn btn-outline-secondary" type="submit">Поиск</button>
             </form>
             <div class="text-end">
               {% if request.user.is_authenticated %}

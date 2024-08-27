@@ -49,6 +49,7 @@ class Comment(models.Model):
     score = models.IntegerField(choices=Score.choices)
     text = models.TextField(blank=False)
     time_create = models.DateTimeField(auto_now_add=True)
+    time_update = models.DateTimeField(auto_now=True)
     idea = models.ForeignKey('Idea', null=True, on_delete=models.SET_NULL)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 

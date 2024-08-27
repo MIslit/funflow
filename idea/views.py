@@ -10,6 +10,7 @@ from django.http.response import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormMixin
+from django.db.models import Q
 
 
 class RegisterUser(CreateView):
@@ -52,28 +53,29 @@ class Index(ListView):
     template_name = 'idea/index.html'
     context_object_name = 'ideas'
     paginate_by = 3
-    
+
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        categories = Category.objects.all()
         context['title'] = 'Главная страница'
-        context['categories'] = categories
+        context['categories'] = Category.objects.all()
         return context
+
 
 class IdeaDetail(DetailView):
     model = Idea
     template_name = 'idea/idea_detail.html'
     context_object_name = 'idea'
     pk_url_kwarg = 'idea_id'
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = AddCommentForm()  # Передаем форму в контекст
         context['title'] = Idea.objects.get(id=self.kwargs['idea_id'])
         context['categories'] = Category.objects.all()
         context['comments'] = Comment.objects.filter(idea_id=self.object.pk)
-        context['score'] = Comment.Score.choices # 
+        context['score'] = Comment.Score.choices
         return context
+
 
 class AddComment(LoginRequiredMixin, CreateView):
     form_class = AddCommentForm
@@ -94,6 +96,7 @@ class AddComment(LoginRequiredMixin, CreateView):
         context['form'] = form
         return self.render_to_response(context)
 
+
 def categories(request):
     categories = Category.objects.all()
 
@@ -110,9 +113,6 @@ class IdeaCategory(ListView):
     slug_url_kwarg = 'category_slug'
     context_object_name = 'ideas'
     paginate_by = 3
-
-    def get_queryset(self):
-        return Idea.objects.filter(category__slug=self.kwargs['category_slug'])
     
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -142,6 +142,7 @@ class AddIdea(LoginRequiredMixin, CreateView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         categories = Category.objects.all()
+        context['title'] = 'Добавить идею'
         context['categories'] = categories
 
         return context
@@ -175,3 +176,26 @@ def my_profile(request, username):
     else:
         return redirect('login')
 
+
+def search_ideas(request):
+    if request.method == 'POST':
+        searched = request.POST['searched']
+        ideas = Idea.objects.filter(
+            Q(title__contains=searched) | Q(description__contains=searched))
+        context = {
+            'title': f"Поиск - {searched}",
+            'ideas': ideas,
+            'categories': Category.objects.all(),
+        }
+        return render(request, 'idea/search_results.html', context)
+    else:
+        return render(request, 'idea/search_results.html', {})
+    
+def about(request):
+    categories = Category.objects.all()
+    context = {
+        'title': 'О нас',
+        'categories': categories,
+    }
+
+    return render(request, 'idea/about.html', context)

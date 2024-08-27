@@ -1,28 +1,33 @@
 
-.custom-scrollbar-js,
-.custom-scrollbar-css {
-  height: 200px;
+/* width */
+::-webkit-scrollbar {
+  width: 3px;
 }
 
-
-/* Custom Scrollbar using CSS */
-.custom-scrollbar-css {
-  overflow-y: scroll;
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
 }
 
-/* scrollbar width */
-.custom-scrollbar-css::-webkit-scrollbar {
-  width: 5px;
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }
 
-/* scrollbar track */
-.custom-scrollbar-css::-webkit-scrollbar-track {
-  background: #eee;
-}
-
-/* scrollbar handle */
-.custom-scrollbar-css::-webkit-scrollbar-thumb {
-  border-radius: 1rem;
-  background-color: #00d2ff;
-  background-image: linear-gradient(to top, #00d2ff 0%, #3a7bd5 100%);
+.gradient-custom { 
+  /* fallback for old browsers */ 
+  background: #4facfe; 
+  /* Chrome 10-25,
+  Safari 5.1-6 */ 
+  background: -webkit-linear-gradient(to bottom right, rgba(79, 172, 254,
+  1), rgba(0, 242, 254, 1)); 
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+,
+  Safari 7+ */ 
+  background: linear-gradient(to bottom right, rgba(79, 172, 254, 1), rgba(0,
+  242, 254, 1));
 }

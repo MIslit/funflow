@@ -1,0 +1,67 @@
+{% extends "idea/base.html" %}
+
+{% block content %}
+<div class="container py-3">
+  <div class="card-group" data-simplebar style="max-height: 18rem;">
+    <div class="row row-cols-1 row-cols-md-3 g-6">
+      {% for i in ideas %}
+        <div class="col" style=" display: flex;">
+          <div class="card border-dark mb-3 mx-auto p-2" style="width: 450px; height: 18rem;">
+            <div class="card-header card text-center">
+              <h5>
+                <a href="{{ i.get_absolute_url }}" class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover">
+                  {{ i.title|truncatechars:30 }}
+                </a>
+              </h5>
+            </div>
+            <div class="card-body">
+              <h4 class="card-text">{{ i.description|linebreaks|truncatechars:40 }}</h4>
+            </div>
+            <div class="card-footer bg-transparent text-center">
+              <a href="{{ i.get_absolute_url }}">
+                <button src="{{ i.get_absolute_url}}" type="button" class="btn btn-success">
+                  Выполнить
+                </button>
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<footer class="footer mt-auto py-3 bg-body-tertiary position-absolute bottom-0 start-50 translate-middle-x">
+  <div class="position-absolute bottom-0 start-50 translate-middle-x">
+  <div class="container">
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      {% if page_obj.has_previous %}
+      <li class="page-item">
+          <a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo;</a>
+        </li>
+      {% endif %}
+        {% for p in paginator.page_range %}
+          {% if page_obj.number == p %}
+            <li class="page-item disabled"><a href="?page={{ p }}" class="page-link">{{ p }}</a></li>
+          {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2  %}
+            <li class="page-item">
+              <a href="?page={{ p }}" class="page-link">{{ p }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+
+      {% if page_obj.has_next %}
+      <li class="page-item">
+        <a href="?page={{ page_obj.next_page_number }}" class="page-link">&raquo;</a>
+      </li>
+      {% endif %}
+    </ul>
+    </nav>
+    {% endif %}
+  </div>
+</footer>
+    
+{% endblock content %}
+
