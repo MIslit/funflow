@@ -6,7 +6,7 @@
     <div class="row row-cols-1 row-cols-md-3 g-6">
       {% for i in ideas %}
         <div class="col">
-          <div class="card border-dark mb-3 mx-auto p-2" style="width: 415px; height: 18rem;">
+          <div class="card border-dark mb-3 mx-auto p-2" style="width: 415px; height: 18rem; display: flex;">
             <div class="card-header card text-center">
               <h5>
                 <a href="{{ i.get_absolute_url }}" class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover">
@@ -31,7 +31,7 @@
   </div>
 </div>
 
-<footer class="footer mt-auto py-3 bg-body-tertiary">
+<footer class="footer mt-auto py-3 bg-body-tertiary position-absolute bottom-0 start-50 translate-middle-x">
   <div class="position-absolute bottom-0 start-50 translate-middle-x">
   <div class="container">
     {% if page_obj.has_other_pages %}
