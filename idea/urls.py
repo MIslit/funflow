@@ -15,6 +15,8 @@ urlpatterns = [
     path('add_idea/', views.AddIdea.as_view(), name='add_idea'),
     path('login/', views.LoginUser.as_view(), name='login'),
     path('register/', views.RegisterUser.as_view(), name='register'),
+    path('change_password', views.ChangePasswordView.as_view(), name='change_password'),
+    path('edit_profile/<slug:username>/', views.edit_profile, name='edit_profile'),
     path('logout/', views.logout_user, name='logout'),
     path('about/', views.about, name='about'),
 ]

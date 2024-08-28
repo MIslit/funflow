@@ -31,3 +31,52 @@
   background: linear-gradient(to bottom right, rgba(79, 172, 254, 1), rgba(0,
   242, 254, 1));
 }
+
+body{
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #eee;
+}
+
+.messages {
+  list-style-type: none;
+  padding: 0;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+}
+
+.messages li {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+}
+
+.messages .success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.messages .error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.messages .warning {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+}
+
+.messages .info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}
+

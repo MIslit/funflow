@@ -1,16 +1,19 @@
+from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
-from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, FormView
+from django.urls import reverse, reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import logout, login
-
-from .models import Idea, Category, User, Comment
-from .forms import AddIdeaForm, RegisterUserForm, LoginUserForm, AddCommentForm
-from django.http.response import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import FormMixin
 from django.db.models import Q
+from django.core.paginator import Paginator
+from django.contrib import messages
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.messages.views import SuccessMessageMixin
+
+from .models import Idea, Category, User, Comment
+from .forms import AddIdeaForm, RegisterUserForm, LoginUserForm, AddCommentForm, UpdateUserForm
 
 
 class RegisterUser(CreateView):
@@ -52,7 +55,7 @@ class Index(ListView):
     model = Idea
     template_name = 'idea/index.html'
     context_object_name = 'ideas'
-    paginate_by = 3
+    paginate_by = 9
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -88,6 +91,7 @@ class AddComment(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user
         form.instance.idea = get_object_or_404(Idea, pk=self.kwargs['idea_id'])
         form.save()
+        messages.success(self.request, 'Комментарий добавлен')
         return redirect('idea', idea_id=form.instance.idea.pk)
 
     def form_invalid(self, form):
@@ -112,8 +116,12 @@ class IdeaCategory(ListView):
     template_name = 'idea/category.html'
     slug_url_kwarg = 'category_slug'
     context_object_name = 'ideas'
-    paginate_by = 3
+    allow_empty = False
+    paginate_by = 9
     
+    def get_queryset(self):
+        return Idea.objects.filter(category__slug=self.kwargs['category_slug'])
+
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         categories = Category.objects.all()
@@ -136,6 +144,7 @@ class AddIdea(LoginRequiredMixin, CreateView):
         instance.description = self.request.POST['description']
         instance.category = Category.objects.get(id=int(self.request.POST['category']))
         form.save()
+        messages.success(self.request, 'Идея добавлена')
         return super().form_valid(form)
     
 
@@ -151,8 +160,10 @@ class AddIdea(LoginRequiredMixin, CreateView):
 @login_required(login_url='/login/')
 def profile(request, username):
     user = get_object_or_404(User, username=username)
+    ideas = Idea.objects.filter(author__username=username)
     context = {
         'user': user, 
+        'ideas': ideas,
         'title': f"Профиль - {user.username}",
     }
     if user.is_authenticated:
@@ -167,14 +178,47 @@ def profile(request, username):
 @login_required(login_url='/login/')
 def my_profile(request, username):
     user = get_object_or_404(User, username=username)
+    ideas = Idea.objects.filter(author__username=username)
     context = {
         'user': user, 
+        'ideas': ideas,
         'title': 'Мой профиль',
     }
     if user.is_authenticated:
         return render(request, 'idea/my_profile.html', context=context)
     else:
         return redirect('login')
+
+
+@login_required(login_url='/login/')
+def edit_profile(request, username):
+    user = get_object_or_404(User, username=username)
+    ideas = Idea.objects.filter(author__username=username)
+    if user.is_authenticated:
+        if request.method == 'POST':
+            profile_form = UpdateUserForm(request.POST, request.FILES, instance=request.user)
+            if profile_form.is_valid():
+                profile_form.save()
+                messages.success(request, 'Профиль изменен')
+                return redirect(to='my_profile', username=username)
+        else:
+            profile_form = UpdateUserForm(instance=request.user)
+        
+        context = {
+        'user': user, 
+        'profile_form': profile_form,
+        'ideas': ideas,
+        'title': 'Редактировать профиль',
+    }
+        return render(request, 'idea/edit_profile.html', context=context)
+    else:
+        return redirect('login')
+
+
+class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
+    template_name = 'idea/change_password.html'
+    success_message = "Пароль успешно изменен"
+    success_url = reverse_lazy('index')
 
 
 def search_ideas(request):
@@ -199,3 +243,6 @@ def about(request):
     }
 
     return render(request, 'idea/about.html', context)
+
+def pageNotFound(request, exception):
+    return HttpResponseNotFound('<h1>Страница не найдена</h1>')
