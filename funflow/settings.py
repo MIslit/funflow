@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '=v-=7f-+%g*f7h&4md&=gu=16ykda3qq!ydgyixskdov$-mz4='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
@@ -138,6 +138,11 @@ AUTH_USER_MODEL = 'idea.User'
 
 LOGIN_REDIRECT_URL = 'login'
 
+<<<<<<< HEAD
+=======
+LOGIN_REDIRECT_URL = 'login'
+
+>>>>>>> fcb310d96d0563dba702d4f95bd4746a960e18ea
 INTERNAL_IPS = [
     '127.0.0.1',
 ]

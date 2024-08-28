@@ -30,6 +30,7 @@
   Safari 7+ */ 
   background: linear-gradient(to bottom right, rgba(79, 172, 254, 1), rgba(0,
   242, 254, 1));
+<<<<<<< HEAD
 }
 
 body{
@@ -80,3 +81,6 @@ body{
   border: 1px solid #bee5eb;
 }
 
+=======
+}
+>>>>>>> fcb310d96d0563dba702d4f95bd4746a960e18ea
