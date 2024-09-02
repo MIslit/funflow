@@ -1,18 +1,11 @@
 {% extends "idea/base.html" %}
 
 {% block content %}
-
-<div class="container">
-    <div class="card-header justify-content-center">
-        <h3 class="font-weight-light my-4 text-center">Изменить профиль</h3>
-    </div>
+  <div class="container py-5">
     <div class="row">
-      <div class="col-lg-4">    
+      <div class="col-lg-4">
         <div class="card mb-4">
           <div class="card-body text-center">
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-error">{{ form.non_field_errors }}</div>
             {% if user.avatar %}
                 <img src="{{ user.avatar.url }}" alt="mdo" width="150px" height="150px" class="rounded-circle">
             {% else %}
@@ -20,14 +13,11 @@
                 <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
                 </svg>
             {% endif %}
-            <p class="text-muted mb-0">
-                <label class="small mb-1">Изменить аватар:</label>
-            </p>
-            {{ profile_form.avatar }}
             <h5 class="my-3">{{ user.username }}</h5>
-            <p class="text-muted mb-4">
-                <label class="small mb-1">Обо мне:</label> {{ profile_form.about_me }}
-            </p>
+            <p class="text-muted mb-4">{{ user.about_me }}</p>
+            <div class="d-flex justify-content-center mb-2">
+              <a href="{% url 'edit_profile' user.username %}"><button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1">Редактировать профиль</button></a>
+            </div>
           </div>
         </div>
         <div class="card mb-4 mb-lg-0">
@@ -46,14 +36,10 @@
           <div class="card-body">
             <div class="row">
               <div class="col-sm-3">
-                <p class="mb-0">Full Name</p>
+                <p class="mb-0">Полное имя</p>
               </div>
               <div class="col-sm-9">
-                <p class="text-muted mb-0">
-                    <label class="small mb-1">First name:</label>
-                    {{ profile_form.first_name }}
-                    <label class="small mb-1">Last name:</label>
-                    {{ profile_form.last_name }}</p>
+                <p class="text-muted mb-0">{{ user.first_name }} {{ user.last_name }}</p>
               </div>
             </div>
             <hr>
@@ -62,7 +48,7 @@
                 <p class="mb-0">Email</p>
               </div>
               <div class="col-sm-9">
-                    {{ profile_form.email }}</p>
+                <p class="text-muted mb-0">{{ user.email }}</p>
               </div>
             </div>
           </div>
@@ -101,22 +87,18 @@
         </div>
       </div>
     </div>
-    <div class="form-content my-3 p-3">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-4">
-                    <div class="card shadow-lg border-0 rounded-lg mt-0 mb-0">
-                        <div class="card-body">
-                            <button type="submit" class="btn btn-dark btn-lg">Сохранить изменения</button>
-                            <button type="reset" class="btn btn-dark btn-lg">Сбросить</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    {% if user_form.errors %}
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <div id="form_errors">
+            {% for key, value in user_form.errors.items %}
+                <strong>{{ value }}</strong>
+            {% endfor %}
         </div>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
-</form>
+    {% endif %}
 </div>
 
-    
 {% endblock content %}
