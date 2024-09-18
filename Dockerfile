@@ -1,10 +1,29 @@
 FROM python:3.10-slim
 
-WORKDIR /app
+SHELL ["/bin/bash", "-c"]
 
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-COPY . .
+RUN pip install --upgrade pip
 
-CMD ["python", "manage.py"]
+RUN apt update && apt -qy install gcc libjpeg-dev libxslt-dev \
+    libpq-dev libmariadb-dev libmariadb-dev-compat gettext cron openssh-client flake8 locales vim
+
+RUN useradd -rms /bin/bash funflow && chmod 777 /opt /run
+
+WORKDIR /funflow
+
+
+RUN mkdir /funflow/static && mkdir /funflow/media && chown -R funflow:funflow /funflow && chmod 755 /funflow
+
+COPY --chown=funflow:funflow . .
+
+
+RUN pip install -r requirements.txt
+
+USER funflow
+
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
