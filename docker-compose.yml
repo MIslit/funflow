@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  funflow_postgres:
+    image: postgres:16
+    container_name: funflow_postgres
+    volumes:
+      - ~/.pg/pg_data/funflow:/var/lib/postgresql/data
+    env_file:
+      - .env
+  funflow_project:
+    image: funflow_django:latest
+    container_name: funflow_django
+    depends_on:
+      - funflow_postgres
+    volumes:
+      - static_volume:/funflow/static
+      - media_volume:/funflow/media
+    env_file:
+      - .env
+    command: >
+      bash -c "./manage.py collectstatic --noinput && ./manage.py migrate  ./manage.py runserver"
+
+
+volumes:
+  static_volume:
+  media_volume:
