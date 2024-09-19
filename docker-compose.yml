@@ -8,8 +8,10 @@ services:
       - ~/.pg/pg_data/funflow:/var/lib/postgresql/data
     env_file:
       - .env
+
   funflow_project:
-    image: funflow_django:latest
+    build: 
+      context: .  # Контекст указывает на текущую директорию с Dockerfile
     container_name: funflow_django
     depends_on:
       - funflow_postgres
@@ -19,8 +21,9 @@ services:
     env_file:
       - .env
     command: >
-      bash -c "./manage.py collectstatic --noinput && ./manage.py migrate  ./manage.py runserver"
-
+      bash -c "./manage.py collectstatic --noinput && ./manage.py migrate && ./manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
 
 volumes:
   static_volume:
