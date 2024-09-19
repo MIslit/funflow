@@ -25,5 +25,6 @@ RUN pip install -r requirements.txt
 
 USER funflow
 
+RUN chmod +x /funflow/manage.py
 
 CMD ["bash", "-c", "./manage.py collectstatic --noinput && ./manage.py migrate && ./manage.py runserver 0.0.0.0:8000"]

@@ -5,6 +5,7 @@ from django.http import HttpResponseNotFound
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
+from django.views.decorators.cache import cache_page
 
 from .models import Idea, Category, Comment
 from .forms import AddIdeaForm, AddCommentForm
