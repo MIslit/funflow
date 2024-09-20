@@ -15,7 +15,7 @@ from .forms import RegisterUserForm, LoginUserForm, UpdateUserForm
 class RegisterUser(CreateView):
     model = User
     form_class = RegisterUserForm
-    template_name = 'idea/account/register.html'
+    template_name = 'account/register.html'
     success_url = reverse_lazy('index')
 
     def get_context_data(self, *, object_list=None, **kwargs):
